@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>gaia-property-inspector</title>
+  <link rel="stylesheet" type="text/css" href="bower_components/base/base.css">
+  <link rel="stylesheet" type="text/css" href="bower_components/gaia-theme/gaia-theme.css">
+  <link rel="stylesheet" type="text/css" href="bower_components/gaia-fonts/style.css">
+  <script src="bower_components/gaia-theme/lib/gaia-theme-selector.js"></script>
+  <script src="bower_components/gaia-component/gaia-component.js"></script>
+  <script src="bower_components/gaia-pages/gaia-pages.js"></script>
+  <script src="bower_components/gaia-icons/gaia-icons.js"></script>
+  <script src="bower_components/font-fit/font-fit.js"></script>
+  <script src="bower_components/gaia-header/gaia-header.js"></script>
+  <script src="bower_components/gaia-text-input/gaia-text-input-multiline.js"></script>
+  <script src="lib/format.js"></script>
+  <script src="gaia-property-inspector.js"></script>
+  <style>
+
+    body {
+      padding: 56px 24px 24px;
+      height: 100%;
+    }
+
+    #root {
+      margin-bottom: 24px;
+    }
+
+    #outline {
+      position: absolute;
+      left: -10px;
+      top: -10px;
+      z-index: 999999;
+      border: dotted 2px var(--highlight-color);
+      box-sizing: border-box;
+      pointer-events: none;
+    }
+
+    body > .inner {
+      display: flex;
+      height: 100%;
+      flex-direction: column;
+    }
+
+    gaia-property-inspector {
+      position: relative;
+      display: block;
+      flex: 1;
+      margin: 24px 0;
+    }
+
+    h1 {
+      font-size: 2em;
+      line-height: 1.3em;
+    }
+
+    h2 {
+
+    }
+
+    gaia-property-inspector {
+
+    }
+
+
+  </style>
+</head>
+<body>
+  <gaia-theme-selector></gaia-theme-selector>
+  <div class="inner">
+    <div id="root" title="foo">
+      <h1>Property Inspector Panel</h1>
+      <h2>Click on any element to display its properties</h2>
+    </div>
+    <hr/>
+    <gaia-property-inspector></gaia-property-inspector>
+    <hr/>
+  </div>
+  <div id="outline"></div>
+
+<script>
+  window.onload = function() {
+    var panel = document.querySelector('gaia-property-inspector');
+    var outline = document.querySelector('#outline');
+    var root = document.querySelector('#root');
+
+    set(root);
+
+    root.addEventListener('click', (e) => {
+      if (e.target === panel) return;
+      set(e.target);
+    });
+
+    function set(target) {
+      panel.set(target);
+      outlineElement(target);
+    }
+
+    function outlineElement(el) {
+      var rects = el.getBoundingClientRect();
+      outline.style.width = rects.width + 'px';
+      outline.style.height = rects.height + 'px';
+      outline.style.left = rects.left + window.scrollX + 'px';
+      outline.style.top = rects.top + window.scrollY + 'px';
+      console.log('rects', rects);
+    }
+  };
+</script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+{
+  "name": "gaia-property-inspector",
+  "homepage": "https://github.com/gaia-components/gaia-property-inspector",
+  "license": "MIT",
+  "main": "gaia-property-inspector.js",
+  "devDependencies": {
+    "bower": "^1.3.5",
+    "browserify": "^5.11.2",
+    "karma": "^0.12.16",
+    "karma-firefox-launcher": "^0.1.3",
+    "karma-mocha": "^0.1.3",
+    "karma-sinon-chai": "^0.1.6",
+    "mozilla-download": "^0.4.3"
+  },
+  "scripts": {
+    "install": "bower install",
+    "test": "./node_modules/karma/bin/karma start test/karma.conf.js --single-run",
+    "test-dev": "./node_modules/karma/bin/karma start test/karma.conf.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/gaia-components/gaia-property-inspector.git"
+  },
+  "bugs": {
+    "url": "https://github.com/gaia-components/gaia-property-inspector/issues"
+  },
+  "browser": {
+    "gaia-component": "./bower_components/gaia-component/gaia-component.js",
+    "gaia-icons": "./bower_components/gaia-icons/gaia-icons.js",
+    "font-fit": "./bower_components/font-fit/font-fit.js"
+  }
+}
