@@ -1,0 +1,30 @@
+{
+  "name": "gaia-pages",
+  "main": "gaia-pages.js",
+  "homepage": "https://github.com/wilsonpage/gaia-pages",
+  "authors": [
+    "Wilson Page <wilsonpage@me.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "examples",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "gaia-component": "gaia-components/gaia-component#~0.3.0"
+  },
+  "_release": "f2f9aafd5b",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "f2f9aafd5b2fcd45ecc67303bb2c9061730ff2b3"
+  },
+  "_source": "git://github.com/gaia-components/gaia-pages.git",
+  "_target": "*",
+  "_originalSource": "gaia-components/gaia-pages",
+  "_direct": true
+}

@@ -1,11 +1,11 @@
 {
-  "name": "gaia-property-inspector",
-  "version": "0.1.0",
-  "homepage": "https://github.com/gaia-components/gaia-property-inspector",
+  "name": "gaia-header",
+  "version": "0.6.1",
+  "homepage": "https://github.com/gaia-components/gaia-header",
   "authors": [
     "Wilson Page <wilsonpage@me.com>"
   ],
-  "main": "gaia-property-inspector.js",
+  "main": "gaia-header.js",
   "license": "MIT",
   "ignore": [
     "**/.*",
@@ -18,10 +18,9 @@
     "README.md"
   ],
   "dependencies": {
+    "gaia-icons": "gaia-components/gaia-icons#~0.7.0",
     "gaia-component": "gaia-components/gaia-component#~0.2.0",
-    "gaia-header": "gaia-components/gaia-header#~0.6.1",
-    "gaia-pages": "gaia-components/gaia-pages",
-    "gaia-text-input": "gaia-components/gaia-text-input"
+    "font-fit": "gaia-components/font-fit#~0.2.2"
   },
   "devDependencies": {
     "gaia-theme": "gaia-components/gaia-theme",
