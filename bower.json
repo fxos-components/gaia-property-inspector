@@ -19,6 +19,7 @@
   ],
   "dependencies": {
     "gaia-component": "gaia-components/gaia-component#~0.2.0",
+    "gaia-pages": "gaia-components/gaia-pages#~0.0.0",
     "gaia-header": "gaia-components/gaia-header#~0.6.1"
   },
   "devDependencies": {
