@@ -279,10 +279,13 @@ var render = {
 
   value: function(item) {
     debug('render value', item);
-    var textarea = document.createElement('gaia-text-input-multiline');
+    // XXX: gaia-text-input is broken on B2G. Use a standard <textarea> for now.
+    //var textarea = document.createElement('gaia-text-input-multiline');
+    var textarea = document.createElement('textarea');
     var el = document.createElement('div');
     el.className = 'value-page';
-    textarea.value = item.value;
+    //textarea.value = item.value;
+    textarea.innerHTML = item.value;
     textarea.className = 'textarea';
     el.appendChild((textarea));
     return el;
