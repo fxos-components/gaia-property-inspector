@@ -125,7 +125,6 @@ module.exports = component.register('gaia-property-inspector', {
 
       :host {
         display: block;
-        position: relative;
       }
 
       .inner {
