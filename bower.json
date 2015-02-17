@@ -1,6 +1,6 @@
 {
   "name": "gaia-property-inspector",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "homepage": "https://github.com/gaia-components/gaia-property-inspector",
   "authors": [
     "Wilson Page <wilsonpage@me.com>"
@@ -26,5 +26,8 @@
     "gaia-theme": "gaia-components/gaia-theme",
     "gaia-fonts": "gaia-components/gaia-fonts",
     "base": "gaia-components/base"
+  },
+  "resolutions": {
+    "gaia-component": "~0.3.0"
   }
 }

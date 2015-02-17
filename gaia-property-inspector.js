@@ -16,6 +16,25 @@ var GaiaPage = require('gaia-pages');
  */
 var debug = 1 ? console.log.bind(console) : function() {};
 
+var allAttributes = (
+  'accept accept-charset accesskey action alt async autocomplete autofocus autoplay challenge ' +
+  'charset checked class colspan content contenteditable contextmenu controls coords crossorigin ' +
+  'defer dir disabled download draggable dropzone enctype form formaction formenctype formmethod ' +
+  'formnovalidate formtarget headers height hidden href hreflang http-equiv id ismap keytype label ' +
+  'lang list loop manifest max maxlength media method min multiple muted name novalidate onabort ' +
+  'onafterprint onbeforeprint onbeforeunload onblur oncanplay oncanplaythrough onchange onclick ' +
+  'oncontextmenu oncopy oncuechange oncut ondblclick ondrag ondragend ondragenter ondragleave ' +
+  'ondragover ondragstart ondrop ondurationchange onemptied onended onerror onfocus onhashchange ' +
+  'oninput oninvalid onkeydown onkeypress onkeyup onload onloadeddata onloadedmetadata onloadstart ' +
+  'onmessage onmousedown onmousemove onmouseout onmouseover onmouseup onoffline ononline onpagehide ' +
+  'onpageshow onpaste onpause onplay onplaying onpopstate onprogress onratechange onreset onresize ' +
+  'onscroll onsearch onseeked onseeking onselect onshow onstalled onstorage onsubmit onsuspend ' +
+  'ontimeupdate ontoggle ontouchcancel ontouchend ontouchmove ontouchstart onunload onvolumechange ' +
+  'onwaiting onwheel open pattern placeholder poster preload readonly rel required rev rowspan ' +
+  'sandbox scoped seamless selected shape size sizes sortable spellcheck src srcdoc step style ' +
+  'tabindex target title translate type usemap value width xmlns'
+).split(' ');
+
 /**
  * Register the element.
  *
@@ -79,7 +98,7 @@ module.exports = component.register('gaia-property-inspector', {
     debug('on page change');
     var page = this.router.current;
     var data = dataFromPath(this.router.path, this.node);
-    var formatted = format(data.value, data.key);
+    var formatted = format(data.value);
     var displayType = formatted.displayType;
     var el = render[displayType](formatted.formatted);
 
@@ -207,9 +226,26 @@ function dataFromPath(path, object) {
     return part ? object[part] : object;
   }, object);
 
+  if (key !== 'attributes') {
+    return {
+      key: key,
+      value: value
+    };
+  }
+
+  var attributesMap = new Map();
+
+  allAttributes.forEach((name) => {
+    attributesMap.set(name, undefined);
+  });
+
+  [].forEach.call(value, (attr) => {
+    attributesMap.set(attr.name, attr.value);
+  });
+
   return {
     key: key,
-    value: value
+    value: attributesMap
   };
 }
 
