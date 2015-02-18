@@ -243,6 +243,28 @@ module.exports = component.register('gaia-property-inspector', {
         color: var(--highlight-color);
       }
 
+      input[type="search"],
+      textarea {
+        background: var(--text-input-#6363CE, var(--input-#6363CE, var(--background-minus, #FFF)));
+        border: 1px solid var(--input-border-color, var(--border-color, var(--background-plus, #E7E7E7)));
+        color: var(--text-color, #000);
+        font: inherit;
+        display: block;
+        margin: 0;
+        width: 100%;
+        resize: none;
+      }
+
+      input[type="search"] {
+        border-radius: 30px;
+        padding: 0 16px;
+        height: 40px;
+      }
+
+      textarea {
+        padding: 10px 16px;
+        height: 100%;
+      }
     </style>`
 });
 
@@ -282,7 +304,7 @@ var render = {
   object: function(props) {
     debug('render props', props);
     var list = document.createElement('div');
-    var search = document.createElement('gaia-text-input');
+    var search = document.createElement('input');
 
     search.type = 'search';
     search.placeholder = 'Search...';
