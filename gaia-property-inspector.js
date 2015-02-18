@@ -69,6 +69,8 @@ module.exports = component.register('gaia-property-inspector', {
     this.shadowRoot.addEventListener('click', e => this.onClick(e));
     this.router.addEventListener('changed', e => this.onPageChange(e));
     this.els.header.addEventListener('action', () => this.router.back({ dir: 'back' }));
+
+    this.rootProperty = this.getAttribute('root-property');
   },
 
   attached: function() {
@@ -77,11 +79,28 @@ module.exports = component.register('gaia-property-inspector', {
     this.els.header.attachedCallback();
   },
 
+  attrs: {
+    rootProperty: {
+      get: function() { return this._rootProperty || ''; },
+      set: function(value) {
+        value = value || '';
+        if (value === this._rootProperty) { return; }
+        this.setAttr('root-property', value);
+        this._rootProperty = value;
+
+        if (this.node) {
+          this.router.reset();
+          this.router.navigate('/' + this._rootProperty);
+        }
+      }
+    }
+  },
+
   set: function(node) {
     debug('set node', node);
     this.node = node;
     this.router.reset();
-    this.router.navigate('/');
+    this.router.navigate('/' + this.rootProperty);
   },
 
   onClick: function(e) {
@@ -250,38 +269,6 @@ function dataFromPath(path, object) {
 }
 
 var render = {
-  // object: function(node) {
-  //   debug('render node page', node);
-  //   var el = document.createElement('ul');
-
-  //   for (var key in node) {
-  //     var item = node[key];
-  //     var li = document.createElement('a');
-  //     var title = document.createElement('h3');
-  //     var value = document.createElement('div');
-  //     var isObject = typeof item.value === 'object';
-
-  //     title.className = 'name';
-  //     title.textContent = key;
-
-  //     value.className = 'value';
-  //     value.textContent = item.displayValue;
-
-  //     li.appendChild(title);
-  //     li.appendChild(value);
-  //     li.classList.add('item');
-
-  //     if (isObject || item.writable) {
-  //       li.classList.add('writable');
-  //       li.href = key;
-  //     }
-
-  //     el.appendChild(li);
-  //   }
-
-  //   return el;
-  // },
-
   object: function(props) {
     debug('render props', props);
     var list = document.createElement('div');
