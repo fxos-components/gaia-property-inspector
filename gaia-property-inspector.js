@@ -317,7 +317,7 @@ var render = {
       item.appendChild(key);
       item.appendChild(value);
       item.className = 'item';
-      item.dataset.searchText = (prop.key || '').toLowerCase();
+      item.dataset.searchText = ((prop.key || '') + '').toLowerCase();
 
       if (isObject || prop.writable) {
         item.classList.add('clickable');
