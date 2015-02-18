@@ -14,7 +14,7 @@ var GaiaPage = require('gaia-pages');
  *
  * @type {Function}
  */
-var debug = 1 ? console.log.bind(console) : function() {};
+var debug = 0 ? console.log.bind(console) : function() {};
 
 var allAttributes = (
   'accept accept-charset accesskey action alt async autocomplete autofocus autoplay challenge ' +
@@ -90,7 +90,7 @@ module.exports = component.register('gaia-property-inspector', {
 
         if (this.node) {
           this.router.reset();
-          this.router.navigate('/' + this._rootProperty);
+          this.router.navigate('/' + value);
         }
       }
     }
@@ -116,13 +116,15 @@ module.exports = component.register('gaia-property-inspector', {
   onPageChange: function() {
     debug('on page change');
     var page = this.router.current;
-    var data = dataFromPath(this.router.path, this.node);
+    var path = this.router.path;
+    var data = dataFromPath(path, this.node);
     var formatted = format(data.value);
     var displayType = formatted.displayType;
     var el = render[displayType](formatted.formatted);
 
     this.setTitle(formatted.title || data.key);
     this.toggleSaveButton(displayType === 'value');
+    this.toggleBackButton(path !== '/' + this.rootProperty);
 
     page.innerHTML = '';
     page.appendChild(el);
@@ -134,6 +136,10 @@ module.exports = component.register('gaia-property-inspector', {
 
   toggleSaveButton: function(value) {
     this.els.saveButton.hidden = !value;
+  },
+
+  toggleBackButton: function(value) {
+    this.els.header.action = value ? 'back' : '';
   },
 
   template: `
@@ -213,6 +219,10 @@ module.exports = component.register('gaia-property-inspector', {
         opacity: 1;
       }
 
+      .item[hidden] {
+        display: none;
+      }
+
       .item:nth-child(odd) {
       }
 
@@ -272,7 +282,26 @@ var render = {
   object: function(props) {
     debug('render props', props);
     var list = document.createElement('div');
+    var search = document.createElement('gaia-text-input');
 
+    search.type = 'search';
+    search.placeholder = 'Search...';
+    list.style.padding = '2px';
+    list.appendChild(search);
+
+    var searchTimeout;
+    search.addEventListener('keyup', () => {
+      clearTimeout(searchTimeout);
+
+      searchTimeout = setTimeout(() => {
+        var value = (search.value || '').toLowerCase();
+        items.forEach((item) => {
+          item.hidden = value && item.dataset.searchText.indexOf(value) === -1;
+        });
+      }, 500);
+    });
+
+    var items = [];
     props.forEach(prop => {
       var item = document.createElement('a');
       var key = document.createElement('h3');
@@ -288,6 +317,7 @@ var render = {
       item.appendChild(key);
       item.appendChild(value);
       item.className = 'item';
+      item.dataset.searchText = (prop.key || '').toLowerCase();
 
       if (isObject || prop.writable) {
         item.classList.add('clickable');
@@ -295,6 +325,7 @@ var render = {
       }
 
       list.appendChild(item);
+      items.push(item);
     });
 
     return list;

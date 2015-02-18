@@ -1,6 +1,6 @@
 {
   "name": "gaia-property-inspector",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "homepage": "https://github.com/gaia-components/gaia-property-inspector",
   "authors": [
     "Wilson Page <wilsonpage@me.com>"
@@ -20,7 +20,8 @@
   "dependencies": {
     "gaia-component": "gaia-components/gaia-component#~0.2.0",
     "gaia-pages": "gaia-components/gaia-pages#~0.1.0",
-    "gaia-header": "gaia-components/gaia-header#~0.6.1"
+    "gaia-header": "gaia-components/gaia-header#~0.6.1",
+    "gaia-text-input": "gaia-components/gaia-text-input#~0.1.1"
   },
   "devDependencies": {
     "gaia-theme": "gaia-components/gaia-theme",
