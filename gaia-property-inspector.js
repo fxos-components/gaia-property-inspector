@@ -60,7 +60,8 @@ module.exports = component.register('gaia-property-inspector', {
       router: this.shadowRoot.querySelector('gaia-pages'),
       pages: this.shadowRoot.querySelectorAll('[data-route]'),
       header: this.shadowRoot.querySelector('gaia-header'),
-      saveButton: this.shadowRoot.querySelector('.save')
+      saveButton: this.shadowRoot.querySelector('.save'),
+      search: this.shadowRoot.querySelector('input[type="search"]')
     };
 
     this.els.title = this.els.header.querySelector('h1');
@@ -69,6 +70,7 @@ module.exports = component.register('gaia-property-inspector', {
     this.shadowRoot.addEventListener('click', e => this.onClick(e));
     this.router.addEventListener('changed', e => this.onPageChange(e));
     this.els.header.addEventListener('action', () => this.router.back({ dir: 'back' }));
+    this.els.search.addEventListener('keyup', e => this.onKeyUp(e));
 
     this.rootProperty = this.getAttribute('root-property');
   },
@@ -125,9 +127,23 @@ module.exports = component.register('gaia-property-inspector', {
     this.setTitle(formatted.title || data.key);
     this.toggleSaveButton(displayType === 'value');
     this.toggleBackButton(path !== '/' + this.rootProperty);
-
+    this.els.search.value = '';
+    
     page.innerHTML = '';
     page.appendChild(el);
+  },
+
+  onKeyUp: function(e) {
+    debug('on key up');
+
+    clearTimeout(this._searchTimeout);
+    this._searchTimeout = setTimeout(() => {
+      var value = (this.els.search.value || '').toLowerCase();
+      var items = [].slice.apply(this.shadowRoot.querySelectorAll('.items > a'));
+      items.forEach((item) => {
+        item.hidden = value && item.dataset.searchText.indexOf(value) === -1;
+      });
+    }, 500);
   },
 
   setTitle: function(text) {
@@ -148,7 +164,8 @@ module.exports = component.register('gaia-property-inspector', {
         <h1>Header</h1>
         <button class="save">Save</button>
       </gaia-header>
-      <gaia-pages manual>
+      <input type="search" placeholder="Search...">
+      <gaia-pages manual class="no-animations">
         <section data-route="."></section>
         <section data-route="."></section>
       </gaia-pages>
@@ -184,7 +201,6 @@ module.exports = component.register('gaia-property-inspector', {
         font-size: 0.9em;
         color: var(--text-color);
         background: var(--background);
-        // font-family: Consolas,Monaco,"Andale Mono",monospace;
         -moz-user-select: none;
         cursor: default;
       }
@@ -245,7 +261,11 @@ module.exports = component.register('gaia-property-inspector', {
 
       input[type="search"],
       textarea {
-        background: var(--text-input-#6363CE, var(--input-#6363CE, var(--background-minus, #FFF)));
+        background:
+          var(--text-input-background,
+          var(--input-background,
+          var(--background-minus,
+          #fff)));
         border: 1px solid var(--input-border-color, var(--border-color, var(--background-plus, #E7E7E7)));
         color: var(--text-color, #000);
         font: inherit;
@@ -304,24 +324,7 @@ var render = {
   object: function(props) {
     debug('render props', props);
     var list = document.createElement('div');
-    var search = document.createElement('input');
-
-    search.type = 'search';
-    search.placeholder = 'Search...';
-    list.style.padding = '2px';
-    list.appendChild(search);
-
-    var searchTimeout;
-    search.addEventListener('keyup', () => {
-      clearTimeout(searchTimeout);
-
-      searchTimeout = setTimeout(() => {
-        var value = (search.value || '').toLowerCase();
-        items.forEach((item) => {
-          item.hidden = value && item.dataset.searchText.indexOf(value) === -1;
-        });
-      }, 500);
-    });
+    list.className = 'items';
 
     var items = [];
     props.forEach(prop => {
