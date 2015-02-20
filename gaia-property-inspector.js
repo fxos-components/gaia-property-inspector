@@ -71,6 +71,18 @@ module.exports = component.register('gaia-property-inspector', {
     this.router.addEventListener('changed', e => this.onPageChange(e));
     this.els.header.addEventListener('action', () => this.router.back({ dir: 'back' }));
     this.els.search.addEventListener('keyup', e => this.onKeyUp(e));
+    this.els.saveButton.addEventListener('click', () => {
+      var e = new CustomEvent('save');
+      setTimeout(() => this.dispatchEvent(e));
+
+      // XXX: May need a `dataToPath()` function to set the saved value
+      var path = this.router.path;
+      var data = dataFromPath(path, this.node);
+      var input = this.shadowRoot.querySelectorAll('.value-page > input');
+      data.value = input.value;
+
+      this.router.back({ dir: 'back' });
+    });
 
     this.rootProperty = this.getAttribute('root-property');
   },
@@ -126,6 +138,7 @@ module.exports = component.register('gaia-property-inspector', {
 
     this.setTitle(formatted.title || data.key);
     this.toggleSaveButton(displayType === 'value');
+    this.toggleSearch(displayType !== 'value');
     this.toggleBackButton(path !== '/' + this.rootProperty);
     this.els.search.value = '';
     
@@ -158,6 +171,10 @@ module.exports = component.register('gaia-property-inspector', {
     this.els.header.action = value ? 'back' : '';
   },
 
+  toggleSearch: function(value) {
+    this.els.search.hidden = !value;
+  },
+
   template: `
     <div class="inner">
       <gaia-header action="back" not-flush>
@@ -177,6 +194,10 @@ module.exports = component.register('gaia-property-inspector', {
         padding: 0;
         box-sizing: border-box;
         list-style-type: none;
+      }
+
+      [hidden] {
+        display: none;
       }
 
       a {
@@ -214,10 +235,6 @@ module.exports = component.register('gaia-property-inspector', {
         height: 100%;
       }
 
-      .value-page .textarea {
-        width: 100%;
-      }
-
       .props {
         width: 100%;
         margin: 0;
@@ -233,13 +250,6 @@ module.exports = component.register('gaia-property-inspector', {
 
       .item.clickable {
         opacity: 1;
-      }
-
-      .item[hidden] {
-        display: none;
-      }
-
-      .item:nth-child(odd) {
       }
 
       .item .name {
@@ -259,8 +269,7 @@ module.exports = component.register('gaia-property-inspector', {
         color: var(--highlight-color);
       }
 
-      input[type="search"],
-      textarea {
+      input {
         background:
           var(--text-input-background,
           var(--input-background,
@@ -271,19 +280,14 @@ module.exports = component.register('gaia-property-inspector', {
         font: inherit;
         display: block;
         margin: 0;
+        padding: 0 16px;
         width: 100%;
+        height: 40px;
         resize: none;
       }
 
       input[type="search"] {
         border-radius: 30px;
-        padding: 0 16px;
-        height: 40px;
-      }
-
-      textarea {
-        padding: 10px 16px;
-        height: 100%;
       }
     </style>`
 });
@@ -358,15 +362,13 @@ var render = {
 
   value: function(item) {
     debug('render value', item);
-    // XXX: gaia-text-input is broken on B2G. Use a standard <textarea> for now.
-    //var textarea = document.createElement('gaia-text-input-multiline');
-    var textarea = document.createElement('textarea');
+    // XXX: gaia-text-input is broken on B2G. Use a standard <input> for now.
+    var input = document.createElement('input');
     var el = document.createElement('div');
     el.className = 'value-page';
-    //textarea.value = item.value;
-    textarea.innerHTML = item.value;
-    textarea.className = 'textarea';
-    el.appendChild((textarea));
+    input.type = 'text';
+    input.value = item.value;
+    el.appendChild(input);
     return el;
   }
 };
