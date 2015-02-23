@@ -72,14 +72,20 @@ module.exports = component.register('gaia-property-inspector', {
     this.els.header.addEventListener('action', () => this.router.back({ dir: 'back' }));
     this.els.search.addEventListener('keyup', e => this.onKeyUp(e));
     this.els.saveButton.addEventListener('click', () => {
-      var e = new CustomEvent('save');
-      setTimeout(() => this.dispatchEvent(e));
-
-      // XXX: May need a `dataToPath()` function to set the saved value
       var path = this.router.path;
-      var data = dataFromPath(path, this.node);
-      var input = this.shadowRoot.querySelectorAll('.value-page > input');
-      data.value = input.value;
+      var input = this.shadowRoot.querySelector('.value-page > input');
+      var oldValue = dataFromPath(path, this.node);
+      var newValue = input.value;
+
+      setValueForPath(path, this.node, newValue);
+
+      var e = new CustomEvent('save', {
+        detail: {
+          oldValue: oldValue,
+          newValue: newValue
+        }
+      });
+      setTimeout(() => this.dispatchEvent(e));
 
       this.router.back({ dir: 'back' });
     });
@@ -141,7 +147,7 @@ module.exports = component.register('gaia-property-inspector', {
     this.toggleSearch(displayType !== 'value');
     this.toggleBackButton(path !== '/' + this.rootProperty);
     this.els.search.value = '';
-    
+
     page.innerHTML = '';
     page.appendChild(el);
   },
@@ -322,6 +328,28 @@ function dataFromPath(path, object) {
     key: key,
     value: attributesMap
   };
+}
+
+function setValueForPath(path, object, value) {
+  var keys = path.split('/');
+  keys.shift();
+
+  var currentObject = object;
+  var currentKey = keys[0];
+
+  for (var i = 0; i < keys.length - 1; i++) {
+    currentObject = currentObject[currentKey];
+    currentKey = keys[i + 1];
+  }
+
+  var setter = currentObject[currentKey];
+  if (setter instanceof Attr) {
+    setter.value = value;
+  }
+
+  else {
+    currentObject[currentKey] = value;
+  }
 }
 
 var render = {
