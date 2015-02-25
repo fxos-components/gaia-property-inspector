@@ -74,13 +74,15 @@ module.exports = component.register('gaia-property-inspector', {
     this.els.saveButton.addEventListener('click', () => {
       var path = this.router.path;
       var input = this.shadowRoot.querySelector('.value-page > input');
-      var oldValue = dataFromPath(path, this.node);
+      var oldFormattedValue = format(dataFromPath(path, this.node).value);
+      var oldValue = oldFormattedValue.formatted.value;
       var newValue = input.value;
 
       setValueForPath(path, this.node, newValue);
 
       var e = new CustomEvent('save', {
         detail: {
+          path: path,
           oldValue: oldValue,
           newValue: newValue
         }
