@@ -204,13 +204,13 @@ module.exports = component.register('gaia-property-inspector', {
         list-style-type: none;
       }
 
-      [hidden] {
-        display: none;
-      }
-
       a {
         color: inherit;
         text-decoration: none;
+      }
+
+      a[hidden] {
+        display: none;
       }
 
       :host {
