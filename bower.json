@@ -18,9 +18,9 @@
     "README.md"
   ],
   "dependencies": {
-    "gaia-component": "gaia-components/gaia-component#~0.2.0",
+    "gaia-component": "gaia-components/gaia-component#~0.3.0",
     "gaia-pages": "gaia-components/gaia-pages#~0.1.0",
-    "gaia-header": "gaia-components/gaia-header#~0.6.1",
+    "gaia-header": "gaia-components/gaia-header#~0.7.1",
     "gaia-text-input": "gaia-components/gaia-text-input#~0.1.1"
   },
   "devDependencies": {
